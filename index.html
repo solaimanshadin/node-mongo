@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node mongo DB website</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <h3>My node mongo website</h3>
+                <p style="display:none;color:green" id="message">Data Inserted Successfully</p>
+                <p  class="lead"> user name : <span id="username"></span></p>
+                <div class="card">
+                    <div class="card-header">User List</div>
+                    <ul id="userlist" class="list-group-flush list-group">
+                    </ul>
+                    <div class="card-footer d-flex">
+                       
+                        <div class="input-group">
+                            <input id="user" type="text" class="form-control">
+                            <div class="input-group-append">
+                              <button id="adduser" class="btn btn-success ">Submit</button>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+       
+    </div>
+
+    <script>
+        function displayList(data){
+            let list = "";
+            data.map(sd => list = list + `<li class="list-group-item"> ${sd.name} </li>`)
+            document.getElementById("userlist").innerHTML = list;
+        }
+        fetch("http://localhost:2020/users/0")
+            .then(res=> res.json())
+            .then(data=> document.getElementById("username").innerText = data.name)
+            .catch(err => console.log(err));
+            
+            fetch("http://localhost:2020/products")
+            .then(res => res.json())
+            .then(data=> displayList(data))
+        //Post data to server
+        const btn = document.getElementById("adduser");
+        btn.addEventListener("click" , () => {
+            let input =  document.getElementById("user").value;
+
+            fetch("http://localhost:2020/adduser", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify({name: input})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.name)
+                document.getElementById("username").innerText = data.name;
+                document.getElementById("message").style.display = "block";
+                nb 
+                setTimeout(()=>{
+                    document.getElementById("message").style.display = "none";
+                },1000)
+            });
+
+        })
+
+        
+    </script>
+</body>
+</html>
